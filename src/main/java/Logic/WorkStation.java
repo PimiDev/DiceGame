@@ -7,9 +7,10 @@ public class WorkStation {
     private int capacidadActual; // resultado del dado
     private int cantidadPendiente; // cantidad total en espera
 
-    public WorkStation(int id , boolean primeraEstacion){
+    public WorkStation(int id){
         this.id = id;
         dice = new Dice();
+        capacidadActual = 1;
     }
 
     public int rollDice(){
@@ -28,4 +29,7 @@ public class WorkStation {
     public void setCantidadPendiente(int cantidadPendiente) {this.cantidadPendiente = cantidadPendiente;}
     public int getCantidadPendiente(){return cantidadPendiente;}
 
+    public String toString(){
+        return "\n<----Estacion numero "+id+"---->\nCapacidad actual de "+capacidadActual+"\nCantidad pendiente de "+cantidadPendiente;
+    }
 }

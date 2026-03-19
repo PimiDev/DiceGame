@@ -1,5 +1,4 @@
 package com.dicegame.dicegame;
-
 import javafx.application.Application;
 
 public class Launcher {
