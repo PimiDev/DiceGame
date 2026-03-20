@@ -72,7 +72,7 @@ public class DiceGame {
         juego.inicializarEstaciones();
         juego.inicializarPendientes();
 
-        System.out.println("=== INICIO DE LA SIMULACIÓN ===");
+        System.out.println("=== INICIO DE LA SIMULACION ===");
 
         // se corren 5 dias para probar
         for (int dia = 1; dia <= 5; dia++) {
@@ -94,7 +94,7 @@ public class DiceGame {
             // cuanta gentte quedo en cola despuies de movimientos
             System.out.print("Estado de las colas: ");
             for (int i = 0; i < juego.estaciones.length; i++) {
-                // Usamos el método que saca la cantidad real (fin - inicio + 1)
+                // fin - inicio + 1
                 int enCola = 0;
                 if(!juego.estaciones[i].getCola().colaVacia()){
                     enCola = juego.estaciones[i].getCola().getFin() - juego.estaciones[i].getCola().getInicio() + 1;
