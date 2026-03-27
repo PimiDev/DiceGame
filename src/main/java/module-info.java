@@ -4,6 +4,10 @@ module com.dicegame.dicegame {
     requires java.desktop;
 
 
-    opens com.dicegame.dicegame to javafx.fxml;
     exports com.dicegame.dicegame;
+
+    opens GUI to javafx.graphics, javafx.fxml;
+    exports GUI;
+    opens com.dicegame.dicegame to javafx.fxml, javafx.graphics;
+
 }

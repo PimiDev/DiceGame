@@ -3,12 +3,13 @@ package Logic;
 public class DiceGame {
 
     private WorkStation[] estaciones;
-    private int totalEntregado = 0;
+
+    private int totalEntregado;        // acumulado ✔
+    private int salieronUltimoTurno;   // último turno ✔
 
     public DiceGame(int nEstaciones){
         estaciones = new WorkStation[10];
     }
-
 
     //crear las estaciones
     public void inicializarEstaciones(){
@@ -24,7 +25,7 @@ public class DiceGame {
     }
 
     public void inicializarPendientes(){
-        for(int i = 1; i < estaciones.length ; i++){
+        for(int i = 1; i < estaciones.length; i++){
             for(int j = 0 ; j<=3 ; j++){
                 estaciones[i].incrementarCola(new People(true));
             }
@@ -32,8 +33,9 @@ public class DiceGame {
     }
 
     public void moverUnidades() {
-        // estaciones de la 1 a la N
-        // Recorremos desde la última hasta la SEGUNDA
+
+        salieronUltimoTurno = 0;
+
         for (int i = estaciones.length - 1; i > 0; i--) {
             WorkStation actual = estaciones[i];
             int capacidad = actual.getValorActual();
@@ -42,28 +44,35 @@ public class DiceGame {
                 if (!actual.getCola().colaVacia()) {
                     People p = actual.procesarPeople();
 
-                    // si no es ultima pasa a la siguiente
                     if (i < estaciones.length - 1) {
                         estaciones[i + 1].incrementarCola(p);
                     } else {
-                        // Si es la última, el cliente sale del sistema :v
-                        System.out.println("Cliente fuera del sistema.");
+                        totalEntregado++;
+                        salieronUltimoTurno++;
                     }
                 }
             }
         }
 
-        // estacion numero 0
-        // Esta no saca de su cola, sino que genera nuevos clientes
-        WorkStation primera = estaciones[0];
-        int nuevosClientes = primera.getValorActual();
+        int nuevosClientes = estaciones[0].getValorActual();
+
         for (int j = 0; j < nuevosClientes; j++) {
-            People nuevo = new People(false); // cramos gente
-            // pasa la gente a la estacion 1
-            estaciones[1].incrementarCola(nuevo);
+            estaciones[1].incrementarCola(new People(false));
         }
-        System.out.println("Se generaron " + nuevosClientes + " nuevos clientes en la entrada.");
     }
+
+    public WorkStation[] getEstaciones(){
+        return estaciones;
+    }
+
+    public int getSalieronUltimoTurno() {
+        return salieronUltimoTurno;
+    }
+
+    public int getTotalEntregado() {
+        return totalEntregado;
+    }
+
     public static void main(String[] args) {
         // crear juego con 5 estaciones
         DiceGame juego = new DiceGame(5);

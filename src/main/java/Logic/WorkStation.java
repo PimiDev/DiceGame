@@ -30,4 +30,33 @@ public class WorkStation {
     public Cola<People> getCola() {
         return cola;
     }
+
+    public WorkStation copiar() {
+        WorkStation copia = new WorkStation();
+
+        // copiar valor del dado
+        copia.valorActual = this.valorActual;
+
+        //copiar la cola
+        Cola<People> colaOriginal = this.cola;
+        Cola<People> colaAux = new Cola<>();
+        Cola<People> colaCopia = new Cola<>();
+
+        while (!colaOriginal.colaVacia()) {
+            People p = colaOriginal.eliminar();
+
+            colaAux.insertar(p);     // para restaurar
+            colaCopia.insertar(p);   // copia real
+        }
+
+        // restaurar original
+        while (!colaAux.colaVacia()) {
+            colaOriginal.insertar(colaAux.eliminar());
+        }
+
+        // asignar copia
+        copia.cola = colaCopia;
+
+        return copia;
+    }
 }
