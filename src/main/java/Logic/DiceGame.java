@@ -8,22 +8,21 @@ public class DiceGame {
     private int salieronUltimoTurno;   // último turno ✔
 
     public DiceGame(int nEstaciones){
-        estaciones = new WorkStation[10];
+
+        estaciones = new WorkStation[nEstaciones];
     }
 
-    //crear las estaciones
     public void inicializarEstaciones(){
         for(int i = 0; i < estaciones.length; i++){
             estaciones[i] = new WorkStation();
         }
     }
-    //todos lanzan los dados
+
     public void lanzarDados(){
         for(WorkStation ws : estaciones){
             ws.rollDice();
         }
     }
-
     public void inicializarPendientes(){
         for(int i = 1; i < estaciones.length; i++){
             for(int j = 0 ; j<=3 ; j++){
@@ -31,12 +30,11 @@ public class DiceGame {
             }
         }
     }
-
     public void moverUnidades() {
-
         salieronUltimoTurno = 0;
 
-        for (int i = estaciones.length - 1; i > 0; i--) {
+
+        for (int i = estaciones.length - 1; i >= 1; i--) {
             WorkStation actual = estaciones[i];
             int capacidad = actual.getValorActual();
 
@@ -47,15 +45,18 @@ public class DiceGame {
                     if (i < estaciones.length - 1) {
                         estaciones[i + 1].incrementarCola(p);
                     } else {
+                        // Es la última estación, salen del sistema
                         totalEntregado++;
                         salieronUltimoTurno++;
                     }
+                } else {
+                    break;
                 }
             }
         }
 
+        // 2. El primero (Estación 0) genera nueva gente para la Estación 1
         int nuevosClientes = estaciones[0].getValorActual();
-
         for (int j = 0; j < nuevosClientes; j++) {
             estaciones[1].incrementarCola(new People(false));
         }

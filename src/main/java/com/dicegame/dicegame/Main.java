@@ -1,6 +1,9 @@
 package com.dicegame.dicegame;
 
+import GUI.BoardView;
+import GUI.BotonesView;
 import GUI.GameView;
+import GUI.StationView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -9,12 +12,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Instanciamos tu clase personalizada
+        StationView sv = new StationView();
+        sv.setNumeroEstacion(1);
 
-        GameView view = new GameView();          // 👈 vista
-        Controlador controller = new Controlador(view); // 👈 controlador
+        BotonesView bv = new BotonesView();
+        BoardView brv = new BoardView();
 
-        Scene scene = new Scene(view, 720, 480);
+        GameView gv = new GameView();
+        Controlador controlador = new Controlador(gv);
+        Scene scene = new Scene(gv, 1080, 480);
 
         try {
             scene.getStylesheets().add(getClass().getResource("/GUI/estilos.css").toExternalForm());

@@ -1,61 +1,91 @@
 package com.dicegame.dicegame;
 
-import GUI.GameView;
 import Logic.DiceGame;
+import GUI.GameView;
+import GUI.StationView;
+import Logic.WorkStation;
+import java.util.ArrayList;
 
 public class Controlador {
 
     private DiceGame diceGame;
-    private GameView gameView;
-    private int turnos;
+    private GameView vista;
+    private int turnoActual;
 
-    public Controlador(GameView gameView){
-        this.gameView = gameView;
+    public Controlador(GameView vista) {
+        this.vista = vista;
+        this.diceGame = new DiceGame(10);
+        this.turnoActual = 0;
 
-        diceGame = new DiceGame(10);
-        turnos = 20;
+
+        diceGame.inicializarEstaciones();
+        diceGame.inicializarPendientes();
+
+
+        vista.getBotones().setRollView(true);
+        vista.getBotones().setMoveView(false);
+        vista.getBotones().setStartView(false);
+
 
         setAccionesBotones();
+
+
+        actualizarInterfaz();
     }
 
-    public void setAccionesBotones(){
+    public void setAccionesBotones() {
 
-        gameView.getBotonesView().getStartButton().setOnAction(actionEvent -> {
-
-            // reiniciar todo
-            diceGame = new DiceGame(10);
-            turnos = 20;
-
-            diceGame.inicializarEstaciones();
-            diceGame.inicializarPendientes();
-
-            // actualizar vista SIEMPRE desde el modelo
-            gameView.getBoardView().sincronizarConLogica(diceGame.getEstaciones());
-
-            gameView.getBotonesView().setStartView(false);
-            gameView.getBotonesView().setRollView(true);
-        });
-
-        gameView.getBotonesView().getRollButton().setOnAction(actionEvent -> {
-
+        vista.getBotones().getRollButton().setOnAction(e -> {
             diceGame.lanzarDados();
 
-            gameView.getBoardView().sincronizarConLogica(diceGame.getEstaciones());
 
-            gameView.getBotonesView().setRollView(false);
-            gameView.getBotonesView().setMoveView(true);
+            vista.getBotones().setRollView(false);
+            vista.getBotones().setMoveView(true);
+
+            actualizarInterfaz();
         });
 
-        gameView.getBotonesView().getMoveButton().setOnAction(actionEvent -> {
 
+        vista.getBotones().getMoveButton().setOnAction(e -> {
             diceGame.moverUnidades();
-            turnos--;
+            turnoActual++;
+            vista.getBotones().setTurnoActual(turnoActual);
+            // Volver a Roll
+            vista.getBotones().setClientesFuera(diceGame.getTotalEntregado());
 
-            gameView.getBoardView().sincronizarConLogica(diceGame.getEstaciones());
+            vista.getBotones().setRollView(true);
+            vista.getBotones().setMoveView(false);
+
+            actualizarInterfaz();
 
 
-            gameView.getBotonesView().setMoveView(false);
-            gameView.getBotonesView().setRollView(true);
+            if (turnoActual >= 20) {
+                System.out.println("Juego Terminado. Total entregado: " + diceGame.getTotalEntregado());
+                vista.getBotones().setRollView(false);
+                vista.getBotones().setMoveView(false);
+            }
         });
+    }
+
+
+    private void actualizarInterfaz() {
+        WorkStation[] estacionesLogica = diceGame.getEstaciones();
+        ArrayList<StationView> estacionesVista = vista.getTablero().getVistasEstaciones();
+
+        for (int i = 0; i < estacionesLogica.length; i++) {
+            if (i < estacionesVista.size()) {
+                WorkStation ws = estacionesLogica[i];
+                StationView sv = estacionesVista.get(i);
+
+
+                sv.getDiceView().setValor(ws.getValorActual());
+                int enCola = 0;
+                if (ws.getCola() != null && !ws.getCola().colaVacia()) {
+                    enCola = ws.getCola().getFin() - ws.getCola().getInicio() + 1;
+                }
+
+                sv.setCantidadPersonas(enCola);
+            }
+        }
     }
 }

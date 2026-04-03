@@ -2,43 +2,42 @@ package GUI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
-public class GameView extends BorderPane { // <--- CAMBIA HBox por BorderPane
+public class GameView extends HBox {
 
-    BoardView boardView;
-    BotonesView botonesView;
+    private BotonesView botones;
+    private BoardView tablero;
 
-    public GameView(){
-        this.setPrefSize(720, 480);
-        this.setMaxSize(720, 480);
-        this.setMinSize(720, 480);
-        // Fondo oscuro para todo el juego
-        this.setStyle("-fx-background-color: #0E0B16;");
+    public GameView() {
+
+        this.setAlignment(Pos.CENTER_LEFT);
         this.setPadding(new Insets(10));
+        this.setSpacing(20);
+        this.setStyle("-fx-background-color: #0E0B16");
 
-        boardView = new BoardView();
-      //  boardView.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-       boardView.setScaleX(0.3);
-        boardView.setScaleY(0.3);
+        this.setMaxSize(1080, 480);
+        this.setPrefSize(1080, 480);
 
-        botonesView = new BotonesView();
-        botonesView.setPrefWidth(150); // ajusta este valor
-        botonesView.setMaxWidth(150);
-        // 1. Ponemos los botones a la IZQUIERDA
-        this.setLeft(botonesView);
-        BorderPane.setAlignment(botonesView, Pos.CENTER);
-        BorderPane.setMargin(botonesView, new Insets(0, 20, 0, 0)); // Espacio con el tablero
 
-        // 2. El tablero en el CENTRO (se expande solo)
-        this.setCenter(boardView);
-        BorderPane.setAlignment(boardView, Pos.CENTER);
+        botones = new BotonesView();
+        tablero = new BoardView();
+
+
+        HBox.setHgrow(botones, Priority.ALWAYS);
+
+
+        botones.setMaxHeight(Double.MAX_VALUE);
+        botones.setMaxWidth(Double.MAX_VALUE);
+
+
+        HBox.setHgrow(tablero, Priority.NEVER);
+
+
+        this.getChildren().addAll(botones, tablero);
     }
 
-    public BoardView getBoardView() {
-        return boardView;
-    }
-    public BotonesView getBotonesView(){
-        return botonesView;
-    }
+    public BotonesView getBotones() { return botones; }
+    public BoardView getTablero() { return tablero; }
 }
